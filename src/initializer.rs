@@ -9,7 +9,8 @@ pub struct Initializer{
 
 impl Initializer{
     pub fn new()->Self{
-        let context = sdl2::init();
+        let context = sdl2::init().unwrap();
+
         return Initializer{
             sdl_context: context
         };
