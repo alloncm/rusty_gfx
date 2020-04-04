@@ -24,7 +24,7 @@ impl EventHandler{
     }
 
     pub fn handle_events(&mut self)->bool{
-        let mut quit:bool = false;
+        let mut alive:bool = true;
         for sdl_event in self.event_pump.poll_iter(){
             
             if self.func_event_handler.is_some(){
@@ -36,12 +36,12 @@ impl EventHandler{
                 }
             }
             match sdl_event{
-                SdlEvent::Quit{timestamp:_}=>quit = true,
+                SdlEvent::Quit{timestamp:_}=>alive = false,
                 _=>{}
             }
         }
 
-        return quit;
+        return alive;
     }
 
     fn sdlevent_into_event(sdl_event: &SdlEvent)->Option<Event>{
