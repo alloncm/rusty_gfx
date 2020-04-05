@@ -5,12 +5,12 @@ use sdl2::Sdl;
 use std::option::Option;
 use crate::event::Event;
 
-pub struct EventHandler{
+pub struct EventHandler<F> where F:FnMut(Event){
     event_pump:EventPump,
-    func_event_handler: Option<fn(Event)>
+    func_event_handler: Option<F>
 }
 
-impl EventHandler{
+impl<F> EventHandler<F> where F: FnMut(Event){
     pub fn init(context:&Sdl)->Self{
         let event_handler = context.event_pump().unwrap();
         return EventHandler{
@@ -19,7 +19,7 @@ impl EventHandler{
         };
     }
 
-    pub fn register_event_handler(&mut self, callback:fn(Event)){
+    pub fn register_event_handler(&mut self, callback:F){
         self.func_event_handler = Option::Some(callback);
     }
 
@@ -28,7 +28,7 @@ impl EventHandler{
         for sdl_event in self.event_pump.poll_iter(){
             
             if self.func_event_handler.is_some(){
-                let callback = self.func_event_handler.unwrap();
+                let callback = self.func_event_handler.as_mut().unwrap();
                 let event = Self::sdlevent_into_event(&sdl_event);
                 if event.is_some(){
                     let event = event.unwrap();
