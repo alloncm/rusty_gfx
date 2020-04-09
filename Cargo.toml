@@ -1,5 +1,5 @@
 [package]
-name = "rusty_gfx"
+name = "stupid_gfx"
 version = "0.1.0"
 authors = ["alloncm <alloncm@gmail.com>"]
 edition = "2018"
