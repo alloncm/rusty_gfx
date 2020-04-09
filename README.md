@@ -11,21 +11,28 @@ In order to build it you need to install cmake (sdl2 needs it to build itself) a
 ## How to use
 Initialize the lib:
 ```rust
-use rusty_gfx::{
-    event_handler::EventHandler,
-    graphics::Graphics,
-    initializer::Initializer
+extern crate stupid_gfx;
+use stupid_gfx::{
+    event::Event,
+    event_handler::EventHandler, 
+    graphics::Graphics, 
+    initializer::Initializer,
+    surface::Surface,
+    event::Keycode
 };
 
 fn main{
     let gfx_initializer: Initializer = Initializer::new();
-    let mut graphics: Graphics = gfx_initializer.init_graphics("app_name", 800, 600);
+    //0xFF for white background
+    let mut graphics: Graphics = gfx_initializer.init_graphics("app_name", 800, 600, 0xFF);
     let mut event_handler: EventHandler = gfx_initializer.init_event_handler();
 }
 ```
 
 Use the lib 
+
 this code draws a cube that is being moved by the keys arrows 
+
 (table for all the keys - https://wiki.libsdl.org/SDL_Keycode?highlight=%28%5CbCategoryEnum%5Cb%29%7C%28CategoryKeyboard%29)
 
 ```rust
