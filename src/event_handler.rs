@@ -32,7 +32,12 @@ impl EventHandler{
     fn sdlevent_into_event(sdl_event: &SdlEvent)->Option<Event>{
         return match sdl_event{
             SdlEvent::Quit{timestamp:_}=>Option::Some(Event::Quit),
-            SdlEvent::KeyDown{timestamp:_, window_id:_, keycode:key, scancode:_,keymod:_, repeat:_}=>Option::Some(Event::KeyPressed(key.unwrap() as u8)),
+            SdlEvent::KeyDown{timestamp:_, window_id:_, keycode:key, scancode:_,keymod:_, repeat:_}=>{
+                match key{
+                    Some(val)=>Option::Some(Event::KeyPressed(*val)),
+                    None=>Option::None
+                }
+            }
             _=>Option::None
         }
     }
