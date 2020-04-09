@@ -1,5 +1,5 @@
-# rusty_gfx
-A simple minimalist and easy to use wrapper around rust sdl2 bindings
+# stupid_gfx
+A stupid simple minimalist and easy to use wrapper around rust sdl2 bindings
 
 I created this wrapper in order to use sdl in my gameboy emulator but in a more convient and easy way.
 
@@ -11,30 +11,51 @@ In order to build it you need to install cmake (sdl2 needs it to build itself) a
 ## How to use
 Initialize the lib:
 ```rust
-use rusty_gfx::{
-    event_handler::EventHandler,
-    graphics::Graphics,
-    initializer::Initializer
+extern crate stupid_gfx;
+use stupid_gfx::{
+    event::Event,
+    event_handler::EventHandler, 
+    graphics::Graphics, 
+    initializer::Initializer,
+    surface::Surface,
+    event::Keycode
 };
 
+fn main{
     let gfx_initializer: Initializer = Initializer::new();
-    let mut graphics: Graphics = gfx_initializer.init_graphics("app_name", 800, 600);
+    //0xFF for white background
+    let mut graphics: Graphics = gfx_initializer.init_graphics("app_name", 800, 600, 0xFF);
     let mut event_handler: EventHandler = gfx_initializer.init_event_handler();
+}
 ```
 
 Use the lib 
+
+this code draws a cube that is being moved by the keys arrows 
+
+(table for all the keys - https://wiki.libsdl.org/SDL_Keycode?highlight=%28%5CbCategoryEnum%5Cb%29%7C%28CategoryKeyboard%29)
+
 ```rust
-while event_handler.handle_events() {
+    let mut alive = true;
+    let mut x = 200;
+    let mut y = 200;
+    let data = vec![0xFF; 400];
+    let surface = Surface::new_from_raw(data, 20, 20);
+    while alive {
         graphics.clear();
-        /*logic rendering code goes here*/
-        
-        //you can put one pixel to the screen with: x, y, r, g, b (in the future there will be also and alpha option)
-        graphics.put_pixel(x,y,r,g,b);
-        
-        //you can draw a surface which is just a bunch of pixels together with: x, y, &Surface
-        graphics.draw_surface(x,y,&surface);
-        
-        /*your logic rendering code stops here*/
+        for event in event_handler.poll_events() {
+            match event {
+                Event::KeyPressed(key) => match key {
+                    Keycode::Right => x += 1,
+                    Keycode::Left => x -= 1,
+                    Keycode::Down => y += 1,
+                    Keycode::Up => y -= 1,
+                    _ => {}
+                },  
+                Event::Quit => alive = false,
+            }
+        }
+        graphics.draw_surface(x, y, &surface);
         graphics.update();
     }
 ```
