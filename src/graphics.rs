@@ -9,20 +9,23 @@ use std::option::Option;
 use crate::surface::Surface;
 use std::mem::size_of;
 use std::ptr;
+use crate::argb_color::ArgbColor;
+use std::mem::transmute;
 
 pub struct Graphics{
     canvas: Canvas<Window>,
     texture:Texture,
     pixels:Vec<u32>,
     pub width:u32,
-    pub height:u32
+    pub height:u32,
+    pub background_value:u8
 }
 
 impl Graphics{
-    pub fn init(context:&Sdl, title:&str, x:u32, y:u32)->Self{
+    pub fn init(context:&Sdl, title:&str, x:u32, y:u32, background_color:u8)->Self{
         let video_subsystem = context.video().unwrap();
         let mut window = video_subsystem.window(title, x, y).build().unwrap();
-        window.set_display_mode(DisplayMode::new(PixelFormatEnum::ARGB32,x as i32, y as i32, 60)).unwrap();
+        window.set_display_mode(DisplayMode::new(PixelFormatEnum::ARGB32,x as i32, y as i32, 0)).unwrap();
         let canvas = window.into_canvas().present_vsync().build().unwrap();
         let texture_creator = canvas.texture_creator();
         let texture = texture_creator.create_texture_static(Option::None,x,y).unwrap();
@@ -31,7 +34,8 @@ impl Graphics{
             texture:texture,
             pixels:vec![0;(x*y) as usize],
             width:x,
-            height:y
+            height:y,
+            background_value: background_color
         };
     }
 
@@ -48,20 +52,17 @@ impl Graphics{
 
     pub fn clear(&mut self){
         unsafe{
-            ptr::write_bytes(self.pixels.as_mut_ptr(), 0, self.pixels.len());
+            ptr::write_bytes(self.pixels.as_mut_ptr(), self.background_value, self.pixels.len());
         }
     }
 
     pub fn draw_surface(&mut self, x:u32, y:u32, surface: &Surface){
         unsafe{
+            let raw_data = transmute::<*const ArgbColor, *const u32>(surface.pixels_data.as_ptr());
+
             for i in 0..surface.height{
-                /*
-                for j in 0..surface.height{
-                    self.pixels[(y*self.width + x + (j*self.width) + i) as usize] = surface.pixels_data[(j*surface.width+i) as usize];
-                }
-                */
                 let dest_ptr = self.pixels.as_mut_ptr().offset(((y+i)*self.width + x) as isize);
-                let src_ptr = surface.pixels_data.as_ptr().offset((i*surface.width) as isize);
+                let src_ptr = raw_data.offset((i*surface.width) as isize);
                 ptr::copy_nonoverlapping(src_ptr, dest_ptr, surface.width as usize);
             }
         }
