@@ -8,6 +8,7 @@ use sdl2::Sdl;
 use std::option::Option;
 use crate::surface::Surface;
 use std::mem::size_of;
+use std::ptr;
 
 pub struct Graphics{
     canvas: Canvas<Window>,
@@ -46,13 +47,22 @@ impl Graphics{
     }
 
     pub fn clear(&mut self){
-        self.canvas.clear();
+        unsafe{
+            ptr::write_bytes(self.pixels.as_mut_ptr(), 0, self.pixels.len());
+        }
     }
 
     pub fn draw_surface(&mut self, x:u32, y:u32, surface: &Surface){
-        for i in 0..surface.width{
-            for j in 0..surface.height{
-                self.pixels[(y*self.width + x + (j*self.width) + i) as usize] = surface.pixels_data[(j*surface.width+i) as usize];
+        unsafe{
+            for i in 0..surface.height{
+                /*
+                for j in 0..surface.height{
+                    self.pixels[(y*self.width + x + (j*self.width) + i) as usize] = surface.pixels_data[(j*surface.width+i) as usize];
+                }
+                */
+                let dest_ptr = self.pixels.as_mut_ptr().offset(((y+i)*self.width + x) as isize);
+                let src_ptr = surface.pixels_data.as_ptr().offset((i*surface.width) as isize);
+                ptr::copy_nonoverlapping(src_ptr, dest_ptr, surface.width as usize);
             }
         }
     }
