@@ -22,13 +22,18 @@ pub struct Graphics{
 }
 
 impl Graphics{
-    pub fn init(context:&Sdl, title:&str, x:u32, y:u32, background_color:u8)->Self{
+    pub fn init(context:&Sdl, title:&str, x:u32, y:u32, background_color:u8, vsync:bool)->Self{
         let video_subsystem = context.video().unwrap();
         let mut window = video_subsystem.window(title, x, y).build().unwrap();
-        window.set_display_mode(DisplayMode::new(PixelFormatEnum::ARGB32,x as i32, y as i32, 0)).unwrap();
-        let canvas = window.into_canvas().present_vsync().build().unwrap();
+        window.set_display_mode(DisplayMode::new(PixelFormatEnum::ARGB32, x as i32, y as i32, 0)).unwrap();
+        let mut canvas_builder = window.into_canvas().accelerated();
+        if vsync{
+            canvas_builder = canvas_builder.present_vsync();
+        }
+        let canvas = canvas_builder.build().unwrap();
         let texture_creator = canvas.texture_creator();
         let texture = texture_creator.create_texture_static(Option::None,x,y).unwrap();
+
         return Graphics{
             canvas: canvas,
             texture:texture,

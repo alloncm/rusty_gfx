@@ -20,7 +20,7 @@ impl Initializer{
         return EventHandler::init(&self.sdl_context);
     }
 
-    pub fn init_graphics(&self, title:&str, x:u32, y:u32, background_color:u8)->Graphics{    
-        return Graphics::init(&self.sdl_context, title, x, y, background_color);
+    pub fn init_graphics(&self, title:&str, x:u32, y:u32, background_color:u8, vsync:bool)->Graphics{    
+        return Graphics::init(&self.sdl_context, title, x, y, background_color,vsync);
     }
 }

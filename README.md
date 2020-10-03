@@ -23,8 +23,8 @@ use stupid_gfx::{
 
 fn main{
     let gfx_initializer: Initializer = Initializer::new();
-    //0xFF for white background
-    let mut graphics: Graphics = gfx_initializer.init_graphics("app_name", 800, 600, 0xFF);
+    //0xFF for white background, true for vsync
+    let mut graphics: Graphics = gfx_initializer.init_graphics("app_name", 800, 600, 0xFF, true);
     let mut event_handler: EventHandler = gfx_initializer.init_event_handler();
 }
 ```
