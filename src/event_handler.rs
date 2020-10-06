@@ -29,7 +29,7 @@ impl EventHandler{
         return events;
     }
 
-    pub fn check_event(&mut self, event:Event)->bool{
+    pub fn has_event_occurred(&mut self, event:Event)->bool{
         match event{
             Event::KeyPressed(key)=>self.event_pump.keyboard_state().is_scancode_pressed(key),
             Event::Quit=> {
