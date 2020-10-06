@@ -29,10 +29,20 @@ impl EventHandler{
         return events;
     }
 
+    pub fn has_event_occurred(&mut self, event:Event)->bool{
+        match event{
+            Event::KeyPressed(key)=>self.event_pump.keyboard_state().is_scancode_pressed(key),
+            Event::Quit=> {
+                self.event_pump.pump_events();
+                return unsafe{sdl2::sys::SDL_HasEvent(sdl2::sys::SDL_EventType::SDL_QUIT as u32) == sdl2::sys::SDL_bool::SDL_TRUE};
+            } 
+        }
+    }
+
     fn sdlevent_into_event(sdl_event: &SdlEvent)->Option<Event>{
         return match sdl_event{
             SdlEvent::Quit{timestamp:_}=>Option::Some(Event::Quit),
-            SdlEvent::KeyDown{timestamp:_, window_id:_, keycode:key, scancode:_,keymod:_, repeat:_}=>{
+            SdlEvent::KeyDown{timestamp:_, window_id:_, keycode:_, scancode:key,keymod:_, repeat:_}=>{
                 match key{
                     Some(val)=>Option::Some(Event::KeyPressed(*val)),
                     None=>Option::None

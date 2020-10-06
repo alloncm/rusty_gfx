@@ -18,7 +18,7 @@ use stupid_gfx::{
     graphics::Graphics, 
     initializer::Initializer,
     surface::Surface,
-    event::Keycode
+    event::Scancode
 };
 
 fn main{
@@ -33,7 +33,7 @@ Use the lib
 
 this code draws a cube that is being moved by the keys arrows 
 
-(table for all the keys - https://wiki.libsdl.org/SDL_Keycode?highlight=%28%5CbCategoryEnum%5Cb%29%7C%28CategoryKeyboard%29)
+(table for all the keys - https://wiki.libsdl.org/SDLScancodeLookup)
 
 ```rust
     let mut alive = true;
@@ -46,10 +46,10 @@ this code draws a cube that is being moved by the keys arrows
         for event in event_handler.poll_events() {
             match event {
                 Event::KeyPressed(key) => match key {
-                    Keycode::Right => x += 1,
-                    Keycode::Left => x -= 1,
-                    Keycode::Down => y += 1,
-                    Keycode::Up => y -= 1,
+                    Scancode::Right => x += 1,
+                    Scancode::Left => x -= 1,
+                    Scancode::Down => y += 1,
+                    Scancode::Up => y -= 1,
                     _ => {}
                 },  
                 Event::Quit => alive = false,
