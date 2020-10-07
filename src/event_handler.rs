@@ -17,7 +17,7 @@ impl EventHandler{
         };
     }
 
-    pub fn poll_events(&mut self)->Vec<Event>{
+    pub fn get_events(&mut self)->Vec<Event>{
         let mut events = Vec::new();
         for sdl_event in self.event_pump.poll_iter(){
             match Self::sdlevent_into_event(&sdl_event){
@@ -29,13 +29,14 @@ impl EventHandler{
         return events;
     }
 
-    pub fn has_event_occurred(&mut self, event:Event)->bool{
-        //pumping the events so the screen would be responsive
+    pub fn pull_events(&mut self){
         self.event_pump.pump_events();
+    }
 
+    pub fn has_input_device_event_occurred(&self, event:Event)->bool{
         match event{
             Event::KeyPressed(key) => self.event_pump.keyboard_state().is_scancode_pressed(key),
-            Event::Quit => unsafe{sdl2::sys::SDL_HasEvent(sdl2::sys::SDL_EventType::SDL_QUIT as u32) == sdl2::sys::SDL_bool::SDL_TRUE}
+            _=>std::panic!("not supported event type")
         }
     }
 
