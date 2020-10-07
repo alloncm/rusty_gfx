@@ -30,12 +30,12 @@ impl EventHandler{
     }
 
     pub fn has_event_occurred(&mut self, event:Event)->bool{
+        //pumping the events so the screen would be responsive
+        self.event_pump.pump_events();
+
         match event{
-            Event::KeyPressed(key)=>self.event_pump.keyboard_state().is_scancode_pressed(key),
-            Event::Quit=> {
-                self.event_pump.pump_events();
-                return unsafe{sdl2::sys::SDL_HasEvent(sdl2::sys::SDL_EventType::SDL_QUIT as u32) == sdl2::sys::SDL_bool::SDL_TRUE};
-            } 
+            Event::KeyPressed(key) => self.event_pump.keyboard_state().is_scancode_pressed(key),
+            Event::Quit => unsafe{sdl2::sys::SDL_HasEvent(sdl2::sys::SDL_EventType::SDL_QUIT as u32) == sdl2::sys::SDL_bool::SDL_TRUE}
         }
     }
 
