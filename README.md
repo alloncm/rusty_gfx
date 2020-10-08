@@ -43,7 +43,7 @@ this code draws a cube that is being moved by the keys arrows
     let surface = Surface::new_from_raw(data, 20, 20);
     while alive {
         graphics.clear();
-        for event in event_handler.poll_events() {
+        for event in event_handler.get_events() {
             match event {
                 Event::KeyPressed(key) => match key {
                     Scancode::Right => x += 1,
