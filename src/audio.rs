@@ -8,15 +8,16 @@ pub struct Audio{
 }
 
 impl Audio{
-    pub fn new(freq:i32, channels:u8)->Self{
+    pub fn new(freq:i32, channels:u8, fps:u8)->Self{
+        let samples = (freq / fps as i32) as u16;
         let desired_audio_spec = sys::SDL_AudioSpec{
             freq: freq ,
             format: sys::AUDIO_F32SYS as u16,
             channels:channels,
             silence:0,
-            samples:(freq  / std::mem::size_of::<f32>() as i32) as u16,
+            samples:samples,
             padding:0,
-            size:133*4,
+            size:(samples as i32 / std::mem::size_of::<f32>() as i32) as u32,
             callback:Option::None,
             userdata:std::ptr::null_mut()
         };
