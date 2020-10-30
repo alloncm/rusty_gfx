@@ -59,9 +59,8 @@ impl Audio{
     pub fn push_audio_to_device(&self, audio:&[f32])->Result<(),&str>{
         let audio_ptr: *const c_void = audio.as_ptr() as *const c_void;
         let data_byte_len = (audio.len() * std::mem::size_of::<f32>()) as u32;
-        
-        unsafe{
 
+        unsafe{
             sys::SDL_ClearError();
             if sys::SDL_QueueAudio(self.device_id, audio_ptr, data_byte_len) != 0{
                 return Err(Self::get_sdl_error_message());
