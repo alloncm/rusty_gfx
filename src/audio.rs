@@ -45,6 +45,7 @@ impl Audio{
 
             let init_audio_spec:sys::SDL_AudioSpec = uninit_audio_spec.assume_init();
 
+            //This will start the audio processing
             sys::SDL_PauseAudioDevice(device_id, 0);
 
             return Audio{
