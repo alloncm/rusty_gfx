@@ -2,6 +2,7 @@ extern crate sdl2;
 use sdl2::Sdl;
 use crate::event_handler::EventHandler;
 use crate::graphics::Graphics;
+use crate::audio::Audio;
 
 pub struct Initializer{
     sdl_context: Sdl
@@ -22,5 +23,8 @@ impl Initializer{
 
     pub fn init_graphics(&self, title:&str, x:u32, y:u32, background_color:u8, vsync:bool)->Graphics{    
         return Graphics::init(&self.sdl_context, title, x, y, background_color,vsync);
+    }
+    pub fn init_audio(&self, freq:i32, channels:u8, fps:u16)->Audio{
+        return Audio::init(freq, channels, fps);
     }
 }
