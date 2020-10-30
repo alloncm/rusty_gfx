@@ -11,7 +11,6 @@ In order to build it you need to install cmake (sdl2 needs it to build itself) a
 ## How to use
 Initialize the lib:
 ```rust
-extern crate stupid_gfx;
 use stupid_gfx::{
     event::Event,
     event_handler::EventHandler, 
