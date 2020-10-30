@@ -1,7 +1,7 @@
 use sdl2::sys;
+use sdl2::libc::c_char;
 use std::ffi::c_void;
 use std::ffi::CStr;
-use sdl2::libc::c_char;
 use std::mem::MaybeUninit;
 
 pub struct Audio{
