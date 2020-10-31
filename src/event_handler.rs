@@ -1,4 +1,3 @@
-extern crate sdl2;
 use sdl2::event::Event as SdlEvent;
 use sdl2::EventPump;
 use sdl2::Sdl;
