@@ -1,4 +1,3 @@
-extern crate sdl2;
 use sdl2::Sdl;
 use crate::event_handler::EventHandler;
 use crate::graphics::Graphics;
