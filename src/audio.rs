@@ -6,43 +6,34 @@ use std::mem::MaybeUninit;
 
 pub struct Audio{
     device_id: sys::SDL_AudioDeviceID,
+    
     pub frequency:i32,
     pub channels:u8
 }
 
 impl Audio{
     pub fn init(freq:i32, channels:u8, buffer_size:u16)->Self{
-
         unsafe{
             sys::SDL_ClearError();
             if sys::SDL_InitSubSystem(sys::SDL_INIT_AUDIO) != 0{
                 std::panic!("{}", Self::get_sdl_error_message());
             }
         }
-
-        let mut found = false;
-
-        for i in 1..=15{
-            if 2u16.pow(i) == buffer_size{
-                found = true;
-                break;
-            }
-        }
-
-        if !found{
-            std::panic!("buffer size must be a power of 2: {}", buffer_size);
+        
+        if !Self::verify_power_of_2(buffer_size){
+            std::panic!("buffer_size must be a power of 2: {}", buffer_size);
         }
 
         let desired_audio_spec = sys::SDL_AudioSpec{
-            freq: freq ,
+            freq: freq,
             format: sys::AUDIO_F32SYS as u16,
-            channels:channels,
-            silence:0,
-            samples:buffer_size,
-            padding:0,
-            size:0,
-            callback:Option::None,
-            userdata:std::ptr::null_mut()
+            channels: channels,
+            silence: 0,
+            samples: buffer_size,
+            padding: 0,
+            size: 0,
+            callback: Option::None,
+            userdata: std::ptr::null_mut()
         };
     
         let mut uninit_audio_spec:MaybeUninit<sys::SDL_AudioSpec> = MaybeUninit::uninit();
@@ -61,9 +52,9 @@ impl Audio{
             sys::SDL_PauseAudioDevice(device_id, 0);
 
             return Audio{
-                frequency:init_audio_spec.freq,
+                frequency: init_audio_spec.freq,
                 channels: init_audio_spec.channels,
-                device_id:device_id
+                device_id: device_id
             };
         }
     }
@@ -80,6 +71,16 @@ impl Audio{
             
             Ok(())
         }
+    }
+
+    fn verify_power_of_2(value:u16)->bool{
+        for i in 1..=15{
+            if 2u16.pow(i) == value{
+                return true;
+            }
+        }
+
+        return false;
     }
 
     fn get_sdl_error_message()->&'static str{

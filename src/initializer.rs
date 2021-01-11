@@ -23,6 +23,7 @@ impl Initializer{
     pub fn init_graphics(&self, title:&str, x:u32, y:u32, background_color:u8, vsync:bool)->Graphics{    
         return Graphics::init(&self.sdl_context, title, x, y, background_color,vsync);
     }
+    
     pub fn init_audio(&self, freq:i32, channels:u8, buffer_size:u16)->Audio{
         return Audio::init(freq, channels, buffer_size);
     }
