@@ -1,6 +1,6 @@
 [package]
 name = "stupid_gfx"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["alloncm <alloncm@gmail.com>"]
 edition = "2018"
 

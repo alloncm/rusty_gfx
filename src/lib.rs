@@ -4,3 +4,4 @@ pub mod graphics;
 pub mod surface;
 pub mod initializer;
 pub mod argb_color;
+pub mod audio;
