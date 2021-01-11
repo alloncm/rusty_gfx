@@ -11,7 +11,7 @@ pub struct Audio{
 }
 
 impl Audio{
-    pub fn init(freq:i32, channels:u8, fps:u16)->Self{
+    pub fn init(freq:i32, channels:u8, buffer_size:u16)->Self{
 
         unsafe{
             sys::SDL_ClearError();
@@ -20,15 +20,27 @@ impl Audio{
             }
         }
 
-        let samples = (freq / fps as i32) as u16;
+        let mut found = false;
+
+        for i in 1..=15{
+            if 2u16.pow(i) == buffer_size{
+                found = true;
+                break;
+            }
+        }
+
+        if !found{
+            std::panic!("buffer size must be a power of 2: {}", buffer_size);
+        }
+
         let desired_audio_spec = sys::SDL_AudioSpec{
             freq: freq ,
             format: sys::AUDIO_F32SYS as u16,
             channels:channels,
             silence:0,
-            samples:samples,
+            samples:buffer_size,
             padding:0,
-            size:(samples as i32 / std::mem::size_of::<f32>() as i32) as u32,
+            size:0,
             callback:Option::None,
             userdata:std::ptr::null_mut()
         };
