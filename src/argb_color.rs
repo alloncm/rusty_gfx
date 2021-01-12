@@ -1,4 +1,5 @@
 
+#[repr(C)]
 pub struct ArgbColor{
     pub dword: u32
 }

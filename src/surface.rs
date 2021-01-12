@@ -1,4 +1,6 @@
 use std::vec::Vec;
+use std::ptr;
+use std::mem;
 use crate::argb_color::ArgbColor;
 
 pub struct Surface{
@@ -24,9 +26,11 @@ impl Surface{
             std::panic!("invalid surface data dimensions do not match");
         }
 
-        let mut data:Vec<ArgbColor> = Vec::with_capacity(raw_data.capacity());
-        for val in raw_data{
-            data.push(ArgbColor::new_from_dword(val));
+        let mut data:Vec<ArgbColor> = Vec::with_capacity(raw_data.len());
+
+        unsafe{
+            ptr::copy_nonoverlapping::<ArgbColor>(raw_data.as_ptr() as *const ArgbColor, data.as_mut_ptr(), raw_data.len());
+            data.set_len(raw_data.len());
         }
 
         return Surface{
