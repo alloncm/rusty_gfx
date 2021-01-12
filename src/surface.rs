@@ -1,6 +1,5 @@
 use std::vec::Vec;
 use std::ptr;
-use std::mem;
 use crate::argb_color::ArgbColor;
 
 pub struct Surface{
